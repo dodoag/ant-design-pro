@@ -1,54 +1,30 @@
-import { AnyAction } from 'redux';
-import { EffectsCommandMap } from 'dva';
-import { MenuDataItem } from '@ant-design/pro-layout';
-import { RouterTypes } from 'umi';
+import type { MenuDataItem, Settings as ProSettings } from '@ant-design/pro-layout';
 import { GlobalModelState } from './global';
-import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { UserModelState } from './user';
+import type { StateType } from './login';
 
-export { GlobalModelState, SettingModelState, UserModelState };
+export { GlobalModelState, UserModelState };
 
-export interface Loading {
+export type Loading = {
   global: boolean;
-  effects: { [key: string]: boolean | undefined };
+  effects: Record<string, boolean | undefined>;
   models: {
     global?: boolean;
     menu?: boolean;
     setting?: boolean;
     user?: boolean;
+    login?: boolean;
   };
-}
+};
 
-export interface ConnectState {
+export type ConnectState = {
   global: GlobalModelState;
   loading: Loading;
-  settings: SettingModelState;
+  settings: ProSettings;
   user: UserModelState;
-}
+  login: StateType;
+};
 
-export type Effect = (
-  action: AnyAction,
-  effects: EffectsCommandMap & { select: <T>(func: (state: ConnectState) => T) => T },
-) => void;
-
-/**
- * @type P: Type of payload
- * @type C: Type of callback
- */
-export type Dispatch = <P = any, C = (payload: P) => void>(action: {
-  type: string;
-  payload?: P;
-  callback?: C;
-  [key: string]: any;
-}) => any;
-
-export interface Route extends MenuDataItem {
+export type Route = {
   routes?: Route[];
-}
-
-/**
- * @type T: Params matched in dynamic routing
- */
-export interface ConnectProps<T = {}> extends Partial<RouterTypes<Route, T>> {
-  dispatch?: Dispatch;
-}
+} & MenuDataItem;
